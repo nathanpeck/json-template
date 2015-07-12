@@ -35,7 +35,7 @@ var song = {
     itemReference: '{{ @numberOfItems }} {{ @typeOfItem }}',
     $return: '{{ itemReference }} on the wall, {{ itemReference }}'
   },
-  $return: '{{ song }}'
+  $return: '{{ verse }}'
 };
 
 console.log(run(verse));
