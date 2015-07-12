@@ -1,4 +1,4 @@
-var run = require('../lib/index.js');
+var engine = require('../lib/index.js');
 var expect = require('chai').expect;
 var _ = require('lodash');
 
@@ -19,12 +19,13 @@ describe('Conditional nodes', function () {
           }
         }
       },
+
       actionResponse: {
         $branch: {
           $basedOn: 'animalAdjective',
           $if: {
-            'fluffy': 'stroked the {{ animalType }}\'s {{ animalAdjective }} fur.',
-            'ferocious': 'ran away from the {{ animalType }} quickly.'
+            'fluffy': 'stroked the {{ @animalType }}\'s {{ @animalAdjective }} fur.',
+            'ferocious': 'ran away from the {{ @animalType }} quickly.'
           }
         }
       },
@@ -39,7 +40,7 @@ describe('Conditional nodes', function () {
         animalAdjective: 'fluffy'
       }
     );
-    var result = run(girlResponseToBunny);
+    var result = engine.evaluate(girlResponseToBunny);
     expect(result).to.equal('When she saw the fluffy bunny she said "Oooh cute!" and ' +
       'then stroked the bunny\'s fluffy fur.');
 
@@ -51,7 +52,7 @@ describe('Conditional nodes', function () {
         animalAdjective: 'ferocious'
       }
     );
-    result = run(boyResponseToGrizzly);
+    result = engine.evaluate(boyResponseToGrizzly);
     expect(result).to.equal('When he saw the ferocious grizzly he said "Aaaaaahhhhh!" and ' +
       'then ran away from the grizzly quickly.');
   });
@@ -64,6 +65,9 @@ describe('Conditional nodes', function () {
       animalReference: "{{ animalAdjective }} {{ animalType }}",
 
       verbalResponse: {
+        $dependencies: [
+          'animalReference'
+        ],
         $branch: {
           $basedOn: 'animalReference',
           $if: {
@@ -75,6 +79,9 @@ describe('Conditional nodes', function () {
         }
       },
       actionResponse: {
+        $dependencies: [
+          'animalReference'
+        ],
         $branch: {
           $basedOn: 'animalReference',
           $if: {
@@ -96,8 +103,8 @@ describe('Conditional nodes', function () {
         animalAdjective: 'fuzzy'
       }
     );
-    var result = run(fuzzySpiderReaction);
-    console.log(result);
+    var result = engine.evaluate(fuzzySpiderReaction);
+    expect(result).to.equal('When he saw the fuzzy spider he said "Aaaaaahhhhh!" and then squashed it with a rolled up newspaper');
 
     var fuzzyPuppyReaction = _.extend(
       _.clone(characterRespondsToAnimal),
@@ -107,11 +114,11 @@ describe('Conditional nodes', function () {
         animalAdjective: 'fuzzy'
       }
     );
-    result = run(fuzzyPuppyReaction);
-    console.log(result);
+    result = engine.evaluate(fuzzyPuppyReaction);
+    expect(result).to.equal('When he saw the fuzzy puppy he said "Awwwwwwwwww!" and then sat down on the floor to play with it');
   });
 
-  it('Simple match should work', function () {
+  it('Conditionals inside of a loop', function () {
     var song = {
       verses: {
         $for: {
@@ -144,14 +151,18 @@ describe('Conditional nodes', function () {
       }
     };
 
-    var result = run(song);
+    var result = engine.evaluate(song);
     expect(result).to.be.a('string');
-    console.log(result);
 
     var lines = result.split('\n');
     for(var i = 0; i < 99; i++) {
       var count = 99 - i;
-      expect(lines[i]).to.equal(count + ' bottles of beer on the wall, ' + count + ' bottles of beer');
+      if (count == 1) {
+        expect(lines[i]).to.equal(count + ' bottle of beer on the wall, ' + count + ' bottle of beer');
+      }
+      else {
+        expect(lines[i]).to.equal(count + ' bottles of beer on the wall, ' + count + ' bottles of beer');
+      }
     }
   });
 });

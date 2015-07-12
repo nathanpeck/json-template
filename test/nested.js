@@ -1,4 +1,4 @@
-var run = require('../lib/index.js');
+var engine = require('../lib/index.js');
 var expect = require('chai').expect;
 var _ = require('lodash');
 
@@ -14,7 +14,7 @@ describe('Recursive nodes', function () {
       $return: '{{ verse }}'
     };
 
-    var result = run(song);
+    var result = engine.evaluate(song);
     expect(result).to.equal('99 bottles of beer on the wall, 99 bottles of beer');
   });
 
@@ -29,7 +29,7 @@ describe('Recursive nodes', function () {
       $return: '{{ verse }}'
     };
 
-    var result = run(song);
+    var result = engine.evaluate(song);
     expect(result).to.equal('99 bottles of beer on the wall, 99 bottles of beer');
   });
 });

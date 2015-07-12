@@ -3,7 +3,7 @@
 __Example:__
 
 ```js
-var run = require('json-template');
+var engine = require('json-template');
 
 var verse = {
   numberOfItems: 99,
@@ -12,7 +12,7 @@ var verse = {
   $return: '{{ itemReference }} on the wall, {{ itemReference }}'
 };
 
-console.log(run(verse));
+console.log(engine.evaluate(verse));
 ```
 
 __Result:__
@@ -26,7 +26,7 @@ __Result:__
 __Example:__
 
 ```js
-var run = require('json-template');
+var engine = require('json-template');
 
 var song = {
   numberOfItems: 99,
@@ -38,7 +38,7 @@ var song = {
   $return: '{{ verse }}'
 };
 
-console.log(run(verse));
+console.log(engine.evaluate(verse));
 ```
 
 __Result:__
@@ -52,7 +52,7 @@ __Result:__
 __Example:__
 
 ```js
-var run = require('json-template');
+var engine = require('json-template');
 
 var characterRespondsToAnimal = {
   pronoun: '',
@@ -90,7 +90,7 @@ var girlResponseToBunny = _.extend(
   }
 );
 
-console.log(run(girlResponseToBunny));
+console.log(engine.evaluate(girlResponseToBunny));
 ```
 
 __Result:__
@@ -104,7 +104,7 @@ When she saw the fluffy bunny she said "Oooh cute!" and then stroked the bunny's
 __Example:__
 
 ```js
-var run = require('json-template');
+var engine = require('json-template');
 
 var song = {
   verses: {
@@ -123,7 +123,7 @@ var song = {
   }
 };
 
-console.log(run(song));
+console.log(engine.evaluate(song));
 ```
 
 __Result:__
@@ -144,7 +144,7 @@ __Result:__
 __Example:__
 
 ```js
-var run = require('json-template');
+var engine = require('json-template');
 
 var song = {
   verses: {
@@ -170,7 +170,7 @@ var song = {
   }
 };
 
-console.log(run(song));
+console.log(engine.evaluate(song));
 ```
 
 __Result:__
@@ -180,4 +180,56 @@ __Result:__
 98 bottles of beer on the wall, 98 bottles of beer
 ...
 1 bottles of beer on the wall, 1 bottles of beer
+```
+
+### Combining iteration with branching
+
+__Example:__
+
+```js
+var engine = require('json-template');
+
+var song = {
+    verses: {
+      $for: {
+        $index: 'verseNumber',
+        $start: 99,
+        $end: 0,
+        $delta: -1,
+        $each: {
+          numberOfItems: '{{ @verseNumber }}',
+          typeOfItem: {
+            $branch: {
+              $basedOn: 'numberOfItems',
+              $if: {
+                '1': 'bottle of beer',
+                $else: 'bottles of beer'
+              }
+            }
+          },
+          itemReference: '{{ numberOfItems }} {{ typeOfItem }}',
+          $return: '{{ itemReference }} on the wall, {{ itemReference }}'
+        }
+      }
+    },
+
+    $return: {
+      $join: {
+        $target: 'verses',
+        $delimiter: '\n'
+      }
+    }
+};
+
+console.log(engine.evaluate(song));
+```
+
+__Result:__
+
+```
+99 bottles of beer on the wall, 99 bottles of beer
+98 bottles of beer on the wall, 98 bottles of beer
+...
+2 bottles of beer on the wall, 2 bottles of beer
+1 bottle of beer on the wall, 1 bottle of beer
 ```

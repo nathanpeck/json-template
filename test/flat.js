@@ -1,4 +1,4 @@
-var run = require('../lib/index.js');
+var engine = require('../lib/index.js');
 var expect = require('chai').expect;
 var _ = require('lodash');
 
@@ -11,7 +11,7 @@ describe('Flat nodes', function () {
       verse: '{{ itemReference }} on the wall, {{ itemReference }}'
     };
 
-    var result = run(verse);
+    var result = engine.evaluate(verse);
     expect(result.itemReference).to.equal('99 bottles of beer');
     expect(result.verse).to.equal('99 bottles of beer on the wall, 99 bottles of beer');
   });
@@ -24,7 +24,7 @@ describe('Flat nodes', function () {
       $return: '{{ itemReference }} on the wall, {{ itemReference }}'
     };
 
-    var result = run(verse);
+    var result = engine.evaluate(verse);
     expect(result).to.equal('99 bottles of beer on the wall, 99 bottles of beer');
   });
 });

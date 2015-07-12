@@ -1,4 +1,4 @@
-var run = require('../lib/index.js');
+var engine = require('../lib/index.js');
 var expect = require('chai').expect;
 var _ = require('lodash');
 
@@ -21,7 +21,7 @@ describe('Looping nodes', function () {
       },
     };
 
-    var result = run(song);
+    var result = engine.evaluate(song);
 
     expect(result.verses).to.be.an('array');
     expect(result.verses).to.have.length(99);
@@ -56,7 +56,7 @@ describe('Looping nodes', function () {
       }
     };
 
-    var result = run(song);
+    var result = engine.evaluate(song);
     expect(result).to.be.a('string');
 
     var lines = result.split('\n');
