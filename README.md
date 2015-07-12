@@ -1,187 +1,42 @@
-An experiment to create a templating language written in JSON, which can be executed to return either a string or object response.
+## json-template
 
-Features added so far include:
+This is what happens when [a MongoDB query object](http://docs.mongodb.org/manual/tutorial/query-documents/) and [a handlebars template](http://handlebarsjs.com/) get together and make a baby.
 
-### Basic flat nodes
+Check out the [examples](docs/examples.md).
 
-__Example:__
+#### Why does this exist?
 
-```js
-var run = require('json-template');
+Good question.
 
-var verse = {
-  numberOfItems: 99,
-  typeOfItem: 'bottles of beer',
-  itemReference: '{{ numberOfItems }} {{ typeOfItem }}',
-  $return: '{{ itemReference }} on the wall, {{ itemReference }}'
-};
+1. Because it is possible.
+2. Because I was bored.
 
-console.log(run(verse));
-```
+#### Should I use this in my software project?
 
-__Result:__
-
-```
-99 bottles of beer on the wall, 99 bottles of beer
-```
-
-### Nested nodes, and references between child and parent
-
-__Example:__
+Even better question. The following code can help you answer that question:
 
 ```js
 var run = require('json-template');
 
-var song = {
-  numberOfItems: 99,
-  typeOfItem: 'bottles of beer',
-  verse: {
-    itemReference: '{{ @numberOfItems }} {{ @typeOfItem }}',
-    $return: '{{ itemReference }} on the wall, {{ itemReference }}'
-  },
-  $return: '{{ song }}'
-};
+var shouldIUseThis = {
+  yourInnerCelebrity: 'FILL IN THE BLANK',
 
-console.log(run(verse));
-```
-
-__Result:__
-
-```
-99 bottles of beer on the wall, 99 bottles of beer
-```
-
-### Conditional branching
-
-__Example:__
-
-```js
-var run = require('json-template');
-
-var characterRespondsToAnimal = {
-  pronoun: '',
-  animalType: '',
-  animalAdjective: '',
-  animalReference: "{{ animalAdjective }} {{ animalType }}",
-
-  verbalResponse: {
+  response: {
     $branch: {
-      $basedOn: 'animalAdjective',
+      $basedOn: "yourInnerCelebrity",
       $if: {
-        'fluffy': 'Oooh cute!',
-        'ferocious': 'Aaaaaahhhhh!'
-      }
-    }
-  },
-  actionResponse: {
-    $branch: {
-      $basedOn: 'animalAdjective',
-      $if: {
-        'fluffy': 'stroked the {{ animalType }}\'s {{ animalAdjective }} fur.',
-        'ferocious': 'ran away from the {{ animalType }} quickly.'
-      }
-    }
-  },
-  $return: 'When {{ pronoun }} saw the {{ animalReference }} {{ pronoun }} said "{{ verbalResponse }}" and then {{ actionResponse }}'
-};
-
-var girlResponseToBunny = _.extend(
-  _.clone(characterRespondsToAnimal),
-  {
-    pronoun: 'she',
-    animalType: 'bunny',
-    animalAdjective: 'fluffy'
-  }
-);
-
-console.log(run(girlResponseToBunny));
-```
-
-__Result:__
-
-```
-When she saw the fluffy bunny she said "Oooh cute!" and then stroked the bunny's fluffy fur.
-```
-
-### Basic loops
-
-__Example:__
-
-```js
-var run = require('json-template');
-
-var song = {
-  verses: {
-    $for: {
-      $index: 'verseNumber',
-      $start: 99,
-      $end: 0,
-      $delta: -1,
-      $each: {
-        numberOfItems: '{{ @verseNumber }}',
-        typeOfItem: 'bottles of beer',
-        itemReference: '{{ numberOfItems }} {{ typeOfItem }}',
-        $return: '{{ itemReference }} on the wall, {{ itemReference }}'
-      }
-    }
-  }
-};
-
-console.log(run(song));
-```
-
-__Result:__
-
-```json
-{
-  "verses": [
-    "99 bottles of beer on the wall, 99 bottles of beer"
-    "98 bottles of beer on the wall, 98 bottles of beer"
-    ...
-    "1 bottles of beer on the wall, 1 bottles of beer"
-  ]
-}
-```
-
-### Array flattening
-
-__Example:__
-
-```js
-var run = require('json-template');
-
-var song = {
-  verses: {
-    $for: {
-      $index: 'verseNumber',
-      $start: 99,
-      $end: 0,
-      $delta: -1,
-      $each: {
-        numberOfItems: '{{ @verseNumber }}',
-        typeOfItem: 'bottles of beer',
-        itemReference: '{{ numberOfItems }} {{ typeOfItem }}',
-        $return: '{{ itemReference }} on the wall, {{ itemReference }}'
-      }
+        'shia labeouf': 'Just do it!',
+        'miley cyrus': 'This module is your wrecking ball.',
+        'tom cruise': 'Scientology approved!',
+        'charlie sheen': 'Doesn\'t matter, either way you\'ll be WINNING!',
+        'lady gaga': 'Absolutely!',
+      },
+      $else: 'Stay far away from this module, for your own safety.'
     }
   },
 
-  $return: {
-    $join: {
-      $target: 'verses',
-      $delimiter: '\n'
-    }
-  }
+  $return: 'The answer is: {{ response }}'
 };
 
-console.log(run(song));
-```
-
-__Result:__
-
-```
-99 bottles of beer on the wall, 99 bottles of beer
-98 bottles of beer on the wall, 98 bottles of beer
-...
-1 bottles of beer on the wall, 1 bottles of beer
+console.log(run(shouldIUseThis));
 ```
