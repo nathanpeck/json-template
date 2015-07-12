@@ -1,0 +1,30 @@
+{
+  "name": "string-template",
+  "description": "Simple template system",
+  "version": "1.0.0",
+  "author": {
+    "name": "Nathan Peck",
+    "email": "nathan.peck1@gmail.com"
+  },
+  "dependencies": {
+    "lodash": "3.10.0"
+  },
+  "devDependencies": {
+    "mocha": "2.2.5",
+    "chai": "3.0.0"
+  },
+  "keywords": [
+    "string",
+    "template",
+    "variable"
+  ],
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "main": "./lib/index.js",
+  "engines": {
+	  "node": ">=0.10.x"
+  },
+  "scripts": {
+    "test": "mocha -b -c ./test/index.js"
+  }
+}
