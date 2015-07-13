@@ -16,7 +16,7 @@ Good question.
 Even better question. The following code can help you answer that question:
 
 ```js
-var run = require('json-template');
+var engine = require('json-template');
 
 var shouldIUseThis = {
   yourInnerCelebrity: 'FILL IN THE BLANK',
@@ -38,5 +38,5 @@ var shouldIUseThis = {
   $return: 'The answer is: {{ response }}'
 };
 
-console.log(run(shouldIUseThis));
+console.log(engine.evaluate(shouldIUseThis));
 ```
