@@ -30,7 +30,7 @@ The results will be the same. However, for the sake of the human mind it is stil
 
 __Q. Why is there no reassignment operator?__
 
-__A.__ Part of this experiment is to see what can be done with a completely immutable language. There by design ance a node's variables have been resolved it becomes a static value that cannot be changed ever again. This language is designed to use functional style operations to "sculpt" data from one form to another.
+__A.__ Part of this experiment is to see what can be done with a completely immutable language. Therefore by design once a node's variables have been resolved it becomes a static value that cannot be changed ever again. This language is designed to use functional style operations to "sculpt" data from one form to another.
 
 __Q. How sophisticated is the `$math` node?__
 
