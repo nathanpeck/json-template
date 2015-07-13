@@ -45,7 +45,7 @@ console.log(engine.evaluate(shouldIUseThis));
 
 Here is a fizzbuzz implementation:
 
-```json
+```js
 var fizzbuzz = {
   items: {
     $for: {
