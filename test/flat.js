@@ -16,6 +16,18 @@ describe('Flat nodes', function () {
     expect(result.verse).to.equal('99 bottles of beer on the wall, 99 bottles of beer');
   });
 
+  it('should resolve a basic node in mixed order', function () {
+    var verse = {
+      $return: '{{ itemReference }} on the wall, {{ itemReference }}',
+      numberOfItems: 99,
+      itemReference: '{{ numberOfItems }} {{ typeOfItem }}',
+      typeOfItem: 'bottles of beer',
+    };
+
+    var result = engine.evaluate(verse);
+    expect(result).to.equal('99 bottles of beer on the wall, 99 bottles of beer');
+  });
+
   it('should resolve a basic node with a $return', function () {
     var verse = {
       numberOfItems: 99,

@@ -41,4 +41,19 @@ describe('Math nodes', function () {
     };
     expect(evaluation).to.throw(Error);
   });
+
+  it('should do some fun math stuff', function () {
+    var result = engine.evaluate({
+      unitConversion: {
+        $math: {
+          $expression: "5.08 cm to inch"
+        }
+      },
+      fancyMath: {
+        $math: {
+          $expression: "sqrt(3^2 + 4^2)"
+        }
+      }
+    });
+  });
 });
