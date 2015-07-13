@@ -2,23 +2,23 @@
 
 __Loops:__
 
-- `$for` - Opens a for loop
-- `$index` - Sets name of the index variable inside a for loop
-- `$start` - Initial value of a loop
+- `$for` - Opens a loop
+- `$index` - Sets name of the index variable that can be reference inside loop
+- `$start` - Initial value of the index
 - `$end` - Value which will terminate the loop
 - `$delta` - Amount by which the index should change each iteration
-- `$each` - Node to evaluate per loop
+- `$each` - Node to evaluate per iteration
 
 __Math:__
 
 - `$math` - Opens a math node
-- `$expression` - Specifies that expression that will be returned as value of the math node.
+- `$expression` - Specifies the expression that will be returned as the value of the math node.
 
 __Branching logic:__
 
 - `$branch` - Starts a branch
 - `$basedOn` - Specifies what variable should be tested against
-- `$if` - Dictionaries of value to outcome
+- `$if` - Dictionary of value to outcome
 - `$else` - Fallback outcome if none of the `$if` values matched
 
 __Evaluation:__
@@ -27,9 +27,9 @@ __Evaluation:__
 
 __Array manipulation:__
 
-- `$join` - Opens operation block to join an array
-- `$target` - Indiciates target array to operate on
-- `$delimiter` - Specifies delimiter to use when joining array
+- `$join` - Opens operation to join an array
+- `$target` - Indicates target array to operate on
+- `$delimiter` - Specifies delimiter to place between array items when joining them
 
 __Debugging:__
 
