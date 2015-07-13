@@ -28,3 +28,48 @@ describe('Flat nodes', function () {
     expect(result).to.equal('99 bottles of beer on the wall, 99 bottles of beer');
   });
 });
+
+describe('Malformed flat nodes', function () {
+  it('should catch node with reference that is impossible to evaluate', function () {
+    var badReference = {
+      foo: 'foo',
+      bar: 'bar',
+      foobar: '{{ foo }}{{ bar }}',
+      foobaz: '{{ foo }}{{ baz }}'
+    };
+
+    var test = function () {
+      var result = engine.evaluate(badReference);
+    };
+
+    expect(test).to.throw(/resolve variable reference/);
+  });
+
+  it('should catch circular references', function () {
+    var badReference = {
+      foo: '{{ bar }}',
+      bar: '{{ foo }}',
+      foobar: '{{ foo }}{{ bar }}',
+      foobaz: 'trololololol'
+    };
+
+    var test = function () {
+      var result = engine.evaluate(badReference);
+    };
+
+    expect(test).to.throw(/circular variable references/);
+  });
+
+  it('should catch bad returns', function () {
+    var badReference = {
+      foo: 'bar',
+      $return: '{{ bar }}'
+    };
+
+    var test = function () {
+      var result = engine.evaluate(badReference);
+    };
+
+    expect(test).to.throw(/resolve variable reference/);
+  });
+});

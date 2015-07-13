@@ -231,3 +231,58 @@ describe('Conditional nodes', function () {
     }
   });
 });
+
+describe('Bad branches', function () {
+  it('Should handle malformed branch statement', function () {
+    var characterRespondsToAnimal = {
+      pronoun: 'she',
+      animalType: 'slimy',
+      animalAdjective: 'worm',
+      animalReference: "{{ animalAdjective }} {{ animalType }}",
+
+      verbalResponse: {
+        $branch: {
+          $if: {
+            'fluffy': 'Oooh cute!',
+            'ferocious': 'Aaaaaahhhhh!'
+          }
+        }
+      },
+
+      $return: 'When {{ pronoun }} saw the {{ animalReference }} {{ pronoun }} said "{{ verbalResponse }}"'
+    };
+
+    var test = function () {
+      var result = engine.evaluate(characterRespondsToAnimal);
+    };
+
+    expect(test).to.throw(/required key \$basedOn/);
+  });
+
+  it('No branches match, and no $else', function () {
+    var characterRespondsToAnimal = {
+      pronoun: 'she',
+      animalType: 'slimy',
+      animalAdjective: 'worm',
+      animalReference: "{{ animalAdjective }} {{ animalType }}",
+
+      verbalResponse: {
+        $branch: {
+          $basedOn: 'animalAdjective',
+          $if: {
+            'fluffy': 'Oooh cute!',
+            'ferocious': 'Aaaaaahhhhh!'
+          }
+        }
+      },
+
+      $return: 'When {{ pronoun }} saw the {{ animalReference }} {{ pronoun }} said "{{ verbalResponse }}"'
+    };
+
+    var test = function () {
+      var result = engine.evaluate(characterRespondsToAnimal);
+    };
+
+    expect(test).to.throw(/Unable to find a matching branch/);
+  });
+});
