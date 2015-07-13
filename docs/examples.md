@@ -190,35 +190,35 @@ __Example:__
 var engine = require('json-template');
 
 var song = {
-    verses: {
-      $for: {
-        $index: 'verseNumber',
-        $start: 99,
-        $end: 0,
-        $delta: -1,
-        $each: {
-          numberOfItems: '{{ @verseNumber }}',
-          typeOfItem: {
-            $branch: {
-              $basedOn: 'numberOfItems',
-              $if: {
-                '1': 'bottle of beer',
-                $else: 'bottles of beer'
-              }
+  verses: {
+    $for: {
+      $index: 'verseNumber',
+      $start: 99,
+      $end: 0,
+      $delta: -1,
+      $each: {
+        numberOfItems: '{{ @verseNumber }}',
+        typeOfItem: {
+          $branch: {
+            $basedOn: 'numberOfItems',
+            $if: {
+              '1': 'bottle of beer',
+              $else: 'bottles of beer'
             }
-          },
-          itemReference: '{{ numberOfItems }} {{ typeOfItem }}',
-          $return: '{{ itemReference }} on the wall, {{ itemReference }}'
-        }
-      }
-    },
-
-    $return: {
-      $join: {
-        $target: 'verses',
-        $delimiter: '\n'
+          }
+        },
+        itemReference: '{{ numberOfItems }} {{ typeOfItem }}',
+        $return: '{{ itemReference }} on the wall, {{ itemReference }}'
       }
     }
+  },
+
+  $return: {
+    $join: {
+      $target: 'verses',
+      $delimiter: '\n'
+    }
+  }
 };
 
 console.log(engine.evaluate(song));
@@ -232,4 +232,71 @@ __Result:__
 ...
 2 bottles of beer on the wall, 2 bottles of beer
 1 bottle of beer on the wall, 1 bottle of beer
+```
+
+### Adding math with iteration and branching
+
+__Example:__
+
+```js
+var engine = require('json-template');
+
+var song = {
+  verses: {
+    $for: {
+      $index: 'verseNumber',
+      $start: 99,
+      $end: 0,
+      $delta: -1,
+      $each: {
+        numberOfItems: '{{ @verseNumber }}',
+        numberOfItemsMinusOne: {
+          $math: {
+            $expression: "{{ @numberOfItems }} - 1"
+          }
+        },
+        typeOfItem: {
+          $branch: {
+            $basedOn: 'numberOfItems',
+            $if: {
+              '1': 'bottle of beer',
+              $else: 'bottles of beer'
+            }
+          }
+        },
+        typeOfItemMinusOne: {
+          $branch: {
+            $basedOn: 'numberOfItemsMinusOne',
+            $if: {
+              '1': 'bottle of beer',
+              $else: 'bottles of beer'
+            }
+          }
+        },
+        itemReference: '{{ numberOfItems }} {{ typeOfItem }}',
+        itemReferenceMinusOne: '{{ numberOfItemsMinusOne }} {{ typeOfItemMinusOne }}',
+        $return: '{{ itemReference }} on the wall, {{ itemReference }}. Take one down and pass it around, {{ itemReferenceMinusOne }} on the wall.'
+      }
+    }
+  },
+
+  $return: {
+    $join: {
+      $target: 'verses',
+      $delimiter: '\n'
+    }
+  }
+};
+
+console.log(engine.evaluate(song));
+```
+
+__Result:__
+
+```
+99 bottles of beer on the wall, 99 bottles of beer. Take one down and pass it around, 98 bottles of beer on the wall.
+98 bottles of beer on the wall, 98 bottles of beer. Take one down and pass it around, 97 bottles of beer on the wall.
+...
+2 bottles of beer on the wall, 2 bottles of beer. Take one down and pass it around, 1 bottle of beer on the wall.
+1 bottle of beer on the wall, 1 bottle of beer. Take one down and pass it around, 0 bottles of beer on the wall.
 ```

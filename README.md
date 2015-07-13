@@ -2,7 +2,7 @@
 
 This is what happens when [a MongoDB query object](http://docs.mongodb.org/manual/tutorial/query-documents/) and [a handlebars template](http://handlebarsjs.com/) get together and make a baby.
 
-Check out the [examples](docs/examples.md).
+Check out the [examples](docs/examples.md), then view the list of [keywords](docs/keywords.md).
 
 #### Why does this exist?
 

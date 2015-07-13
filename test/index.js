@@ -9,6 +9,9 @@ require('./flat.js');
 // Test recursive resolution of nested nodes
 require('./nested.js');
 
+// Math nodes
+require('./math.js');
+
 // Test simple looping operations
 require('./loops.js');
 

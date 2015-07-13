@@ -65,9 +65,6 @@ describe('Conditional nodes', function () {
       animalReference: "{{ animalAdjective }} {{ animalType }}",
 
       verbalResponse: {
-        $dependencies: [
-          'animalReference'
-        ],
         $branch: {
           $basedOn: 'animalReference',
           $if: {
@@ -79,9 +76,6 @@ describe('Conditional nodes', function () {
         }
       },
       actionResponse: {
-        $dependencies: [
-          'animalReference'
-        ],
         $branch: {
           $basedOn: 'animalReference',
           $if: {
@@ -118,7 +112,7 @@ describe('Conditional nodes', function () {
     expect(result).to.equal('When he saw the fuzzy puppy he said "Awwwwwwwwww!" and then sat down on the floor to play with it');
   });
 
-  it('Conditionals inside of a loop', function () {
+  it('Basic conditionals inside of a loop', function () {
     var song = {
       verses: {
         $for: {
@@ -162,6 +156,77 @@ describe('Conditional nodes', function () {
       }
       else {
         expect(lines[i]).to.equal(count + ' bottles of beer on the wall, ' + count + ' bottles of beer');
+      }
+    }
+  });
+
+  it('Conditionals inside of a loop with fancy math', function () {
+    var song = {
+      verses: {
+        $for: {
+          $index: 'verseNumber',
+          $start: 99,
+          $end: 0,
+          $delta: -1,
+          $each: {
+            numberOfItems: '{{ @verseNumber }}',
+            numberOfItemsMinusOne: {
+              $math: {
+                $expression: "{{ @numberOfItems }} - 1"
+              }
+            },
+            typeOfItem: {
+              $branch: {
+                $basedOn: 'numberOfItems',
+                $if: {
+                  '1': 'bottle of beer',
+                  $else: 'bottles of beer'
+                }
+              }
+            },
+            typeOfItemMinusOne: {
+              $branch: {
+                $basedOn: 'numberOfItemsMinusOne',
+                $if: {
+                  '1': 'bottle of beer',
+                  $else: 'bottles of beer'
+                }
+              }
+            },
+            itemReference: '{{ numberOfItems }} {{ typeOfItem }}',
+            itemReferenceMinusOne: '{{ numberOfItemsMinusOne }} {{ typeOfItemMinusOne }}',
+            $return: '{{ itemReference }} on the wall, {{ itemReference }}. Take one down and pass it around, ' +
+                     '{{ itemReferenceMinusOne }} on the wall.'
+          }
+        }
+      },
+
+      $return: {
+        $join: {
+          $target: 'verses',
+          $delimiter: '\n'
+        }
+      }
+    };
+
+    var result = engine.evaluate(song);
+
+    expect(result).to.be.a('string');
+
+    var lines = result.split('\n');
+    for(var i = 0; i < 99; i++) {
+      var count = 99 - i;
+      if (count == 1) {
+        expect(lines[i]).to.equal(count + ' bottle of beer on the wall, ' + count + ' bottle of beer. ' +
+          'Take one down and pass it around, ' + (count - 1) + ' bottles of beer on the wall.');
+      }
+      else if (count == 2) {
+        expect(lines[i]).to.equal(count + ' bottles of beer on the wall, ' + count + ' bottles of beer. ' +
+          'Take one down and pass it around, ' + (count - 1) + ' bottle of beer on the wall.');
+      }
+      else {
+        expect(lines[i]).to.equal(count + ' bottles of beer on the wall, ' + count + ' bottles of beer. ' +
+          'Take one down and pass it around, ' + (count - 1) + ' bottles of beer on the wall.');
       }
     }
   });

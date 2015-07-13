@@ -11,7 +11,8 @@
   },
   "devDependencies": {
     "mocha": "2.2.5",
-    "chai": "3.0.0"
+    "chai": "3.0.0",
+    "mathjs": "1.7.1"
   },
   "keywords": [
     "string",
