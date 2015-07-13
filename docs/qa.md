@@ -56,6 +56,53 @@ console.log(result);
 { unitConversion: 0.050800000000000005, fancyMath: 5 }
 ```
 
+__Q. How does scope work?__
+
+__A.__ By default variables can only reference other keys at the same level. However, by using the `@` sign a variable can reference a key that is one scope up.
+
+So this will work:
+
+```js
+var result = engine.evaluate({
+  one: 1
+  levelOne: {
+    reference: '{{ @one }}'
+  }
+});
+console.log(result);
+```
+
+However this will fail:
+
+```js
+var result = engine.evaluate({
+  one: 1
+  levelOne: {
+    levelTwo: {
+      reference: '{{ @one }}'
+    }
+  }
+});
+console.log(result);
+```
+
+The workaround is to do something like this to explicitly pull a value down into the scope below:
+
+```js
+var result = engine.evaluate({
+  one: 1
+  levelOne: {
+    one: '{{ @one }}'
+    levelTwo: {
+      reference: '{{ @one }}'
+    }
+  }
+});
+console.log(result);
+```
+
+I may add a more global scope in the future, but for now this forces a very explicit import of higher level variables that prevents unexpected scope collisions.
+
 __Q. How is the performance?__
 
 __A.__ I haven't optimized anything for performance. Currently it is recalculating dependencies between nodes on each recursion, which is wasteful as it should have the ability to remember deep dependencies that it discovered when evaluating a top level node.
