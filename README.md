@@ -40,3 +40,59 @@ var shouldIUseThis = {
 
 console.log(engine.evaluate(shouldIUseThis));
 ```
+
+#### Not scared away yet?
+
+Here is a fizzbuzz implementation:
+
+```json
+var fizzbuzz = {
+  items: {
+    $for: {
+      $index: 'iterationNumber',
+      $start: 1,
+      $end: 31,
+      $delta: 1,
+      $each: {
+        index: "{{ @iterationNumber }}",
+        mod3: {
+          $math: {
+            $expression: "{{ @index }} % 3 == 0"
+          }
+        },
+        mod5: {
+          $math: {
+            $expression: "{{ @index }} % 5 == 0"
+          }
+        },
+        $return: {
+          $branch: {
+            $basedOn: '{{ @mod3 }}:{{ @mod5 }}',
+            $if: {
+              "true:true": "Fizzbuzz",
+              "true:false": "Fizz",
+              "false:true": "Buzz",
+              "false:false": "{{ @iterationNumber }}"
+            }
+          }
+        }
+      }
+    }
+  },
+
+  $return: {
+    $join: {
+      $target: 'items',
+      $delimiter: ', '
+    }
+  }
+};
+
+console.log(engine.evaluate(fizzbuzz));
+```
+
+__Results:__
+
+```
+1, 2, Fizz, 4, Buzz, Fizz, 7, 8, Fizz, Buzz, 11, Fizz, 13, 14, Fizzbuzz, 16, 17, Fizz, 19, Buzz, Fizz, 22, 23, Fizz, Buzz, 26, Fizz, 28, 29, Fizzbuzz
+```

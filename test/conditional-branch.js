@@ -12,7 +12,7 @@ describe('Conditional nodes', function () {
 
       verbalResponse: {
         $branch: {
-          $basedOn: 'animalAdjective',
+          $basedOn: '{{ @animalAdjective }}',
           $if: {
             'fluffy': 'Oooh cute!',
             'ferocious': 'Aaaaaahhhhh!'
@@ -22,7 +22,7 @@ describe('Conditional nodes', function () {
 
       actionResponse: {
         $branch: {
-          $basedOn: 'animalAdjective',
+          $basedOn: '{{ @animalAdjective }}',
           $if: {
             'fluffy': 'stroked the {{ @animalType }}\'s {{ @animalAdjective }} fur.',
             'ferocious': 'ran away from the {{ @animalType }} quickly.'
@@ -62,11 +62,9 @@ describe('Conditional nodes', function () {
       pronoun: '',
       animalType: '',
       animalAdjective: '',
-      animalReference: "{{ animalAdjective }} {{ animalType }}",
-
       verbalResponse: {
         $branch: {
-          $basedOn: 'animalReference',
+          $basedOn: "{{ @animalAdjective }} {{ @animalType }}",
           $if: {
             'fuzzy spider': 'Aaaaaahhhhh!',
             'fuzzy puppy': 'Awwwwwwwwww!',
@@ -77,7 +75,7 @@ describe('Conditional nodes', function () {
       },
       actionResponse: {
         $branch: {
-          $basedOn: 'animalReference',
+          $basedOn: "{{ @animalAdjective }} {{ @animalType }}",
           $if: {
             'fuzzy spider': 'squashed it with a rolled up newspaper',
             'fuzzy puppy': 'sat down on the floor to play with it',
@@ -86,7 +84,7 @@ describe('Conditional nodes', function () {
           }
         }
       },
-      $return: 'When {{ pronoun }} saw the {{ animalReference }} {{ pronoun }} said "{{ verbalResponse }}" and then {{ actionResponse }}'
+      $return: 'When {{ pronoun }} saw the {{ animalAdjective }} {{ animalType }} {{ pronoun }} said "{{ verbalResponse }}" and then {{ actionResponse }}'
     };
 
     var fuzzySpiderReaction = _.extend(
@@ -121,17 +119,17 @@ describe('Conditional nodes', function () {
           $end: 0,
           $delta: -1,
           $each: {
-            numberOfItems: '{{ @verseNumber }}',
+            beerCount: "{{ @verseNumber }}",
             typeOfItem: {
               $branch: {
-                $basedOn: 'numberOfItems',
+                $basedOn: '{{ @beerCount }}',
                 $if: {
                   '1': 'bottle of beer',
                   $else: 'bottles of beer'
                 }
               }
             },
-            itemReference: '{{ numberOfItems }} {{ typeOfItem }}',
+            itemReference: '{{ @verseNumber }} {{ typeOfItem }}',
             $return: '{{ itemReference }} on the wall, {{ itemReference }}'
           }
         }
@@ -177,7 +175,7 @@ describe('Conditional nodes', function () {
             },
             typeOfItem: {
               $branch: {
-                $basedOn: 'numberOfItems',
+                $basedOn: '{{ @numberOfItems }}' ,
                 $if: {
                   '1': 'bottle of beer',
                   $else: 'bottles of beer'
@@ -186,7 +184,7 @@ describe('Conditional nodes', function () {
             },
             typeOfItemMinusOne: {
               $branch: {
-                $basedOn: 'numberOfItemsMinusOne',
+                $basedOn: '{{ @numberOfItemsMinusOne }}',
                 $if: {
                   '1': 'bottle of beer',
                   $else: 'bottles of beer'

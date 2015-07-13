@@ -62,7 +62,7 @@ var characterRespondsToAnimal = {
 
   verbalResponse: {
     $branch: {
-      $basedOn: 'animalAdjective',
+      $basedOn: '{{ @animalAdjective }}',
       $if: {
         'fluffy': 'Oooh cute!',
         'ferocious': 'Aaaaaahhhhh!'
@@ -71,7 +71,7 @@ var characterRespondsToAnimal = {
   },
   actionResponse: {
     $branch: {
-      $basedOn: 'animalAdjective',
+      $basedOn: '{{ @animalAdjective }}',
       $if: {
         'fluffy': 'stroked the {{ animalType }}\'s {{ animalAdjective }} fur.',
         'ferocious': 'ran away from the {{ animalType }} quickly.'
@@ -200,7 +200,7 @@ var song = {
         numberOfItems: '{{ @verseNumber }}',
         typeOfItem: {
           $branch: {
-            $basedOn: 'numberOfItems',
+            $basedOn: '{{ @numberOfItems }}',
             $if: {
               '1': 'bottle of beer',
               $else: 'bottles of beer'
@@ -257,7 +257,7 @@ var song = {
         },
         typeOfItem: {
           $branch: {
-            $basedOn: 'numberOfItems',
+            $basedOn: '{{ @numberOfItems }}' ,
             $if: {
               '1': 'bottle of beer',
               $else: 'bottles of beer'
@@ -266,7 +266,7 @@ var song = {
         },
         typeOfItemMinusOne: {
           $branch: {
-            $basedOn: 'numberOfItemsMinusOne',
+            $basedOn: '{{ @numberOfItemsMinusOne }}',
             $if: {
               '1': 'bottle of beer',
               $else: 'bottles of beer'
@@ -275,7 +275,8 @@ var song = {
         },
         itemReference: '{{ numberOfItems }} {{ typeOfItem }}',
         itemReferenceMinusOne: '{{ numberOfItemsMinusOne }} {{ typeOfItemMinusOne }}',
-        $return: '{{ itemReference }} on the wall, {{ itemReference }}. Take one down and pass it around, {{ itemReferenceMinusOne }} on the wall.'
+        $return: '{{ itemReference }} on the wall, {{ itemReference }}. Take one down and pass it around, ' +
+                 '{{ itemReferenceMinusOne }} on the wall.'
       }
     }
   },

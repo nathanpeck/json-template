@@ -17,3 +17,6 @@ require('./loops.js');
 
 // Test conditional branch operations
 require('./conditional-branch.js');
+
+// Fizzbuzz
+require('./fizzbuzz.js');
