@@ -108,3 +108,85 @@ __Q. How is the performance?__
 __A.__ I haven't optimized anything for performance. Currently it is recalculating dependencies between nodes on each recursion, which is wasteful as it should have the ability to remember deep dependencies that it discovered when evaluating a top level node.
 
 So there are huge potential improvements to be made in performance.
+
+__Q. Why is JSON so ugly?__
+
+__A.__ Because it has too many quotes and curly brackets and semicolons. Luckily YAML exists to save us from the horribleness of JSON:
+
+Compare this:
+
+```json
+{
+  "items": {
+    "$for": {
+      "$index": "iterationNumber",
+      "$start": 1,
+      "$end": 31,
+      "$delta": 1,
+      "$each": {
+        "index": "{{ @iterationNumber }}",
+        "mod3": {
+          "$math": {
+            "$expression": "{{ @index }} % 3 == 0"
+          }
+        },
+        "mod5": {
+          "$math": {
+            "$expression": "{{ @index }} % 5 == 0"
+          }
+        },
+        "$return": {
+          "$branch": {
+            "$basedOn": "{{ @mod3 }}:{{ @mod5 }}",
+            "$if": {
+              "true:true": "Fizzbuzz",
+              "true:false": "Fizz",
+              "false:true": "Buzz",
+              "false:false": "{{ @iterationNumber }}"
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "$return": {
+    "$join": {
+      "$target": "items",
+      "$delimiter": ", "
+    }
+  }
+}
+```
+
+With this:
+
+```yaml
+---
+  items:
+    $for:
+      $index: "iterationNumber"
+      $start: 1
+      $end: 31
+      $delta: 1
+      $each:
+        index: "{{ @iterationNumber }}"
+        mod3:
+          $math:
+            $expression: "{{ @index }} % 3 == 0"
+        mod5:
+          $math:
+            $expression: "{{ @index }} % 5 == 0"
+        $return:
+          $branch:
+            $basedOn: "{{ @mod3 }}:{{ @mod5 }}"
+            $if:
+              true:true: "Fizzbuzz"
+              true:false: "Fizz"
+              false:true: "Buzz"
+              false:false: "{{ @iterationNumber }}"
+  $return:
+    $join:
+      $target: "items"
+      $delimiter: ", "
+```
