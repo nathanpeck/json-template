@@ -29,7 +29,7 @@ var shouldIUseThis = {
         'miley cyrus': 'This module is your wrecking ball.',
         'tom cruise': 'Scientology approved!',
         'charlie sheen': 'Doesn\'t matter, either way you\'ll be WINNING!',
-        'lady gaga': 'Absolutely!',
+        'lady gaga': 'You\'re on the right track baby, you were born this way.',
       },
       $else: 'Stay far away from this module, for your own safety.'
     }
